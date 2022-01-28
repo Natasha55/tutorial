@@ -1,12 +1,14 @@
 package luxoft.tutorial.service;
 
 import luxoft.tutorial.entity.Department;
+import luxoft.tutorial.error.DepartmentNotFoundExeption;
 import luxoft.tutorial.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
@@ -25,8 +27,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Department fetchDepartmentById(Long departmentId) {
-        return departmentRepository.findById(departmentId).get();
+    public Department fetchDepartmentById(Long departmentId) throws DepartmentNotFoundExeption {
+        Optional<Department> department =
+        departmentRepository.findById(departmentId);
+        if(!department.isPresent()){
+            throw new DepartmentNotFoundExeption("Department not available");
+        }
+        return department.get();
     }
 
     @Override
@@ -53,6 +60,11 @@ public class DepartmentServiceImpl implements DepartmentService {
             departmentDataBase.setDepartmentAddress(department.getDepartmentAddress());
         }
         return departmentRepository.save(departmentDataBase);
+    }
+
+    @Override
+    public Department fetchDepartmentByName(String departmentName) { //like indys
+        return departmentRepository.findByDepartmentNameIgnoreCase(departmentName);
     }
 
 }
