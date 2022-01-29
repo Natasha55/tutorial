@@ -16,7 +16,7 @@ public interface DepartmentService {
 
   public Department updateDepartment(Long departmentId, Department department);
 
-  public Department fetchDepartmentByName(String departmentName); //like indys
+  public Department fetchDepartmentByName(String departmentName);
 
 
 }
